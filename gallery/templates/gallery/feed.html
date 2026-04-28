@@ -1,0 +1,165 @@
+{% extends 'gallery/base.html' %}
+
+{% block content %}
+<h2>Gallery Feed</h2>
+
+{% for artwork in artworks %}
+    <div class="card">
+
+        <!-- HEADER -->
+        <div class="post-header">
+    
+            {% if artwork.owner.profile.profile_image %}
+                <img src="{{ artwork.owner.profile.profile_image.url }}" class="feed-avatar">
+            {% else %}
+                <div class="feed-avatar"></div>
+            {% endif %}
+
+            <a href="{% url 'user_profile' artwork.owner.username %}">
+                {{ artwork.owner.username }}
+            </a>
+
+        </div>
+
+
+
+        <!-- IMAGE -->
+        <img src="{{ artwork.image.url }}">
+
+        <!-- BODY -->
+        <div class="card-body">
+
+            <!-- ACTIONS -->
+            <div class="actions">
+                <button type="button" onclick="likeArtwork({{ artwork.id }})">
+                    ❤️
+                </button>
+            </div>
+
+            <!-- LIKES -->
+            <p><strong>
+                <span id="likes-{{ artwork.id }}">{{ artwork.likes.count }}</span> likes
+            </strong></p>
+
+            <!-- CAPTION -->
+            <p>
+                <strong>{{ artwork.owner.username }}</strong>
+                {{ artwork.description }}
+            </p>
+
+            <!-- COMMENTS -->
+            <div id="comments-{{ artwork.id }}">
+                {% for comment in artwork.comments.all %}
+                    <p class="comment" id="comment-{{ comment.id }}">
+                        <strong>
+                            <a href="{% url 'user_profile' comment.user.username %}">
+                                {{ comment.user.username }}
+                            </a>
+                        </strong>
+                        {{ comment.text }}
+
+                        {% if user.is_staff %}
+                            <button onclick="deleteComment({{ comment.id }})" style="color:red;">
+                                ✖
+                            </button>
+                        {% endif %}
+                    </p>
+                {% endfor %}
+            </div>
+
+            <!-- ADD COMMENT -->
+            <div>
+                <input type="text" id="comment-input-{{ artwork.id }}" placeholder="Add a comment...">
+                <button onclick="postComment({{ artwork.id }})">Post</button>
+            </div>
+
+        </div>
+    </div>
+{% endfor %}
+
+<script>
+function likeArtwork(artworkId) {
+    fetch(`/like/${artworkId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCSRFToken()
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        const el = document.getElementById(`likes-${artworkId}`);
+        el.innerText = data.likes_count;
+
+        // ❤️ quick animation
+        el.style.transform = "scale(1.2)";
+        setTimeout(() => el.style.transform = "scale(1)", 150);
+    });
+}
+
+function postComment(artworkId) {
+    const input = document.getElementById(`comment-input-${artworkId}`);
+    const text = input.value;
+
+    fetch(`/comment/${artworkId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCSRFToken(),
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `text=${encodeURIComponent(text)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        const commentSection = document.getElementById(`comments-${artworkId}`);
+        commentSection.innerHTML += `<p><strong>${data.username}:</strong> ${data.text}</p>`;
+        input.value = '';
+    });
+}
+
+function getCSRFToken() {
+    return document.cookie.split('; ')
+        .find(row => row.startsWith('csrftoken'))
+        .split('=')[1];
+}
+
+function deleteComment(commentId) {
+    fetch(`/delete-comment/${commentId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCSRFToken()
+        }
+    })
+    .then(() => location.reload()); // quick version
+}
+
+function deleteLike(likeId) {
+    fetch(`/delete-like/${likeId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCSRFToken()
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            // 🗑️ Remove the like from UI
+            const likeElement = document.getElementById(`like-${likeId}`);
+            if (likeElement) {
+                likeElement.remove();
+            }
+
+            // 🔢 Update like count
+            document.getElementById(`likes-${data.artwork_id}`).innerText = data.likes_count;
+        }
+    });
+}
+if (likeElement) {
+    likeElement.style.opacity = 0;
+    setTimeout(() => likeElement.remove(), 200);
+}
+
+</script>
+
+
+{% endblock %}
+

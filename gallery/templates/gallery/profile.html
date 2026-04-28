@@ -1,0 +1,116 @@
+{% extends 'gallery/base.html' %}
+
+{% block content %}
+
+<!-- PROFILE HEADER -->
+<div class="profile-header">
+
+    {% if profile_user.profile.profile_image %}
+        <img src="{{ profile_user.profile.profile_image.url }}" class="profile-avatar">
+    {% else %}
+        <div class="profile-avatar"></div>
+    {% endif %}
+
+    <div>
+        <h2>{{ profile_user.username }}</h2>
+
+        <p><strong>{{ artworks.count }}</strong> posts</p>
+
+        {% if profile %}
+            <p>{{ profile.bio }}</p>
+        {% endif %}
+
+        {% if user.username == profile_user.username %}
+            <a class="btn" href="{% url 'edit_profile' %}">Edit Profile</a>
+        {% endif %}
+    </div>
+
+</div>
+
+<hr>
+
+<!-- GRID -->
+<div class="grid">
+    {% for artwork in artworks %}
+        <div class="grid-item" onclick="openModal({{ artwork.id }})">
+            <img src="{{ artwork.image.url }}" alt="art">
+
+            <div class="overlay">
+                ❤️ {{ artwork.likes.count }}
+            </div>
+        </div>
+    {% empty %}
+        <p>No posts yet.</p>
+    {% endfor %}
+</div>
+
+<!-- MODAL -->
+<div id="post-modal" class="modal" onclick="closeModal(event)">
+    <div class="modal-content">
+
+        <!-- IMAGE -->
+        <div class="modal-image">
+            <img id="modal-image">
+        </div>
+
+        <!-- INFO -->
+        <div class="modal-info">
+            <h3 id="modal-username"></h3>
+
+            <p id="modal-description"></p>
+
+            <p><strong id="modal-likes"></strong> likes</p>
+
+            <div id="modal-comments"></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+const posts = {
+    {% for artwork in artworks %}
+        "{{ artwork.id }}": {
+            image: "{{ artwork.image.url }}",
+            username: "{{ artwork.owner.username }}",
+            description: "{{ artwork.description|escapejs }}",
+            likes: "{{ artwork.likes.count }}",
+            comments: [
+                {% for comment in artwork.comments.all %}
+                    {
+                        user: "{{ comment.user.username }}",
+                        text: "{{ comment.text|escapejs }}"
+                    }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ]
+        }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+};
+
+function openModal(id) {
+    const post = posts[id];
+
+    document.getElementById("post-modal").style.display = "flex";
+
+    document.getElementById("modal-image").src = post.image;
+    document.getElementById("modal-username").innerText = post.username;
+    document.getElementById("modal-description").innerText = post.description;
+    document.getElementById("modal-likes").innerText = post.likes;
+
+    const commentsDiv = document.getElementById("modal-comments");
+    commentsDiv.innerHTML = "";
+
+    post.comments.forEach(c => {
+        commentsDiv.innerHTML += `<p><strong>${c.user}:</strong> ${c.text}</p>`;
+    });
+}
+
+function closeModal(event) {
+    if (event.target.id === "post-modal") {
+        document.getElementById("post-modal").style.display = "none";
+    }
+}
+</script>
+
+{% endblock %}
