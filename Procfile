@@ -1,0 +1,1 @@
+web: gunicorn inkspire_project.wsgi
