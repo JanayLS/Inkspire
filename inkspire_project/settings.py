@@ -39,6 +39,15 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "gallery",
 ]
+INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'Janay S',
+    'API_KEY': '865462448978534',
+    'API_SECRET': '_ApBj161NALzIcjJvsoK1rGmCZA'
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -123,8 +132,8 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = "media"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'  
