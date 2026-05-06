@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "gallery",
     "cloudinary",
     "cloudinary_storage",
-    "gallery",
 ]
 INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
 
