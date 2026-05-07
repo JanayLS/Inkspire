@@ -28,6 +28,7 @@
 </div>
 
 <hr>
+<h2>Galleries</h2> <div class="gallery-list"> {% for gallery in galleries %} <div class="card"> <h3>{{ gallery.name }}</h3> <p>{{ gallery.description }}</p> <a href="{% url 'view_gallery' gallery.id %}"> Open Gallery </a> </div> {% empty %} <p>No galleries yet.</p> {% endfor %} </div>
 
 <!-- GRID -->
 <div class="grid">

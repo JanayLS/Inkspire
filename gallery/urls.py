@@ -19,4 +19,5 @@ urlpatterns = [
     path('accounts/signup/', views.signup, name='signup'),
     path("dashboard/delete-user/<int:user_id>/", views.delete_user, name="delete_user"),
     path("dashboard/users/", views.admin_users, name="admin_users"),
+    path('create-gallery/', views.create_gallery, name='create_gallery'),
 ]

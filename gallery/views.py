@@ -30,6 +30,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
+from .models import Artwork, Gallery
+
 
 def is_admin(user):
     return user.is_authenticated and user.is_staff
@@ -132,10 +134,12 @@ def user_profile(request, username):
 def user_profile(request, username):
     user = get_object_or_404(User, username=username)
     artworks = Artwork.objects.filter(owner=user).order_by('-created_at')
-
+    galleries = Gallery.objects.filter(owner=user)
+    
     return render(request, 'gallery/profile.html', {
         'profile_user': user,
-        'artworks': artworks
+        'artworks': artworks,
+        'galleries': galleries
     })
 
 def register(request):
@@ -198,3 +202,20 @@ def like_artwork(request, artwork_id):
     return JsonResponse({
         'likes_count': artwork.likes.count()
     })
+    
+@login_required
+def create_gallery(request):
+    if request.method == 'POST':
+        form = GalleryForm(request.POST)
+
+        if form.is_valid():
+            gallery = form.save(commit=False)
+            gallery.owner = request.user
+            gallery.save()
+
+            return redirect('user_profile', username=request.user.username)
+
+    else:
+        form = GalleryForm()
+
+    return render(request, 'gallery/create_gallery.html', {'form': form})
