@@ -205,17 +205,13 @@ def like_artwork(request, artwork_id):
     
 @login_required
 def create_gallery(request):
-    if request.method == 'POST':
-        form = GalleryForm(request.POST)
+    form = GalleryForm(request.POST or None)
 
+    if request.method == "POST":
         if form.is_valid():
             gallery = form.save(commit=False)
             gallery.owner = request.user
             gallery.save()
+            return redirect("gallery_feed")
 
-            return redirect('user_profile', username=request.user.username)
-
-    else:
-        form = GalleryForm()
-
-    return render(request, 'gallery/create_gallery.html', {'form': form})
+    return render(request, "gallery/create_gallery.html", {"form": form})
