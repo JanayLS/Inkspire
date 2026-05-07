@@ -27,6 +27,17 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
+
+def is_admin(user):
+    return user.is_authenticated and user.is_staff
+
+@user_passes_test(is_admin)
+def admin_users(request):
+    users = User.objects.all()
+    return render(request, "admin_users.html", {"users": users})
 
 @user_passes_test(is_admin)
 def delete_user(request, user_id):
@@ -40,8 +51,6 @@ def delete_user(request, user_id):
     messages.success(request, "User deleted successfully.")
     return redirect("admin_dashboard")
 
-def is_admin(user):
-    return user.is_authenticated and user.is_staff
 
 class ProfileForm(forms.ModelForm):
     class Meta:

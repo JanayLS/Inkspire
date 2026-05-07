@@ -41,10 +41,6 @@
                 <span id="likes-{{ artwork.id }}">{{ artwork.likes.count }}</span> likes
             </strong></p>
 
-            <a href="{% url 'delete_user' user.id %}" onclick="return confirm('Delete this user?')">
-                Delete
-            </a>
-
             <!-- CAPTION -->
             <p>
                 <strong>{{ artwork.owner.username }}</strong>
