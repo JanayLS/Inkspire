@@ -9,14 +9,14 @@
         <!-- HEADER -->
         <div class="post-header">
     
-            {% if artwork.owner.profile.profile_image %}
+            {% if artwork.gallery.owner.profile.profile_image %}
                 <img src="{{ artwork.owner.profile.profile_image.url }}" class="feed-avatar">
             {% else %}
                 <div class="feed-avatar"></div>
             {% endif %}
 
-            <a href="{% url 'user_profile' artwork.owner.username %}">
-                {{ artwork.owner.username }}
+            <a href="{% url 'user_profile' artwork.gallery.owner.username %}">
+                {{ artwork.gallery.owner.username }}
             </a>
 
         </div>
@@ -43,7 +43,7 @@
 
             <!-- CAPTION -->
             <p>
-                <strong>{{ artwork.owner.username }}</strong>
+                <strong>{{ artwork.gallery.owner.username }}</strong>
                 {{ artwork.description }}
             </p>
 
@@ -152,10 +152,6 @@ function deleteLike(likeId) {
             document.getElementById(`likes-${data.artwork_id}`).innerText = data.likes_count;
         }
     });
-}
-if (likeElement) {
-    likeElement.style.opacity = 0;
-    setTimeout(() => likeElement.remove(), 200);
 }
 
 </script>
