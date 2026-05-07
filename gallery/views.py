@@ -123,7 +123,7 @@ def delete_like(request, like_id):
 def user_profile(request, username):
     user = get_object_or_404(User, username=username)
     profile = Profile.objects.filter(user=user).first()
-    artworks = Artwork.objects.filter(owner=user).order_by('-created_at')
+    artworks = Artwork.objects.filter(gallery__owner=user).order_by('-created_at')
 
     return render(request, 'gallery/profile.html', {
         'profile_user': user,
@@ -215,3 +215,4 @@ def create_gallery(request):
             return redirect("gallery_feed")
 
     return render(request, "gallery/create_gallery.html", {"form": form})
+
