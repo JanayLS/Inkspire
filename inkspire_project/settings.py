@@ -44,8 +44,6 @@ INSTALLED_APPS = [
     "cloudinary_storage",
 ]
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -155,6 +153,9 @@ cloudinary.config(
 )
 
 STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
