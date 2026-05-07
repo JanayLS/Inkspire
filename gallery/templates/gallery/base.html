@@ -291,13 +291,18 @@
         display: block;
         flex-shrink: 0;
     }
+
+    .site-logo {
+        height: 60px;
+        width: auto;
+    }
 </style>
 <link rel="icon" type="image/x-icon" href="{% static 'images/logo.jpeg' %}">
 </head>
 <body>
 
     <nav>
-        <img src="{% static 'images/logo.jpeg' %}" alt="Logo">
+        <img src="{% static 'images/logo.jpeg' %}" alt="Logo" class="site-logo">
         <div class="logo"><strong>Inkspire</strong></div>
 
         <div>
