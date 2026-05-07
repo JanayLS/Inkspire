@@ -20,9 +20,25 @@
 
     nav {
         background: linear-gradient(90deg, #ff6ec7, #ff9a9e);
+
         padding: 15px 30px;
-        border-bottom: none;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
         box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .site-logo {
+        height: 55px;
+        width: auto;
     }
 
     nav a {
@@ -292,26 +308,19 @@
         flex-shrink: 0;
     }
 
-    .site-logo {
-        height: 60px;
-        width: auto;
-        margin-right: 15px;
-    }
 </style>
 <link rel="icon" type="image/jpeg" href="{% static 'images/logo.jpeg' %}">
 </head>
 <body>
 
     <nav>
-        <img src="{% static 'images/logo.jpeg' %}" alt="Logo" class="site-logo">
-        <div class="logo"><strong>Inkspire</strong></div>
-
-        <div>
+        <div class="nav-links">
             <a href="{% url 'gallery_feed' %}">Home</a>
             <a href="{% url 'upload_artwork' %}">Upload</a>
 
             {% if user.is_authenticated %}
                 <a href="{% url 'user_profile' user.username %}">Profile</a>
+
                 <form action="{% url 'logout' %}" method="post" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit">Logout</button>
@@ -319,6 +328,11 @@
             {% else %}
                 <a href="{% url 'login' %}">Login</a>
             {% endif %}
+        </div>
+
+        <div class="brand">
+            <div class="logo"><strong>Inkspire</strong></div>
+            <img src="{% static 'images/logo.jpeg' %}" alt="Logo" class="site-logo">
         </div>
     </nav>
 
