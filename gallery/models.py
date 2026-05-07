@@ -41,3 +41,12 @@ class Like(models.Model):
 
     class Meta:
         unique_together = ('artwork', 'user')
+        
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
+from django.dispatch import receiver
+
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
