@@ -210,7 +210,7 @@ def create_gallery(request):
     if request.method == "POST":
         if form.is_valid():
             gallery = form.save(commit=False)
-            gallery.owner = request.user
+            gallery.owner = request.user  # ✅ THIS is correct place
             gallery.save()
             return redirect("gallery_feed")
 

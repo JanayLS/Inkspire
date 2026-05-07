@@ -19,7 +19,6 @@ class Artwork(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='artworks/')
     created_at = models.DateTimeField(auto_now_add=True)
-    gallery.owner = request.user
     gallery = models.ForeignKey(
         "Gallery",
         on_delete=models.SET_NULL,
