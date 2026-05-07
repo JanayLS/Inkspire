@@ -23,7 +23,25 @@ from .models import Profile
 from django.contrib.auth import login
 from django import forms
 from .models import Profile
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
 
+@user_passes_test(is_admin)
+def delete_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+
+    if request.user == user:
+        messages.error(request, "You cannot delete yourself.")
+        return redirect("admin_dashboard")
+
+    user.delete()
+    messages.success(request, "User deleted successfully.")
+    return redirect("admin_dashboard")
+
+def is_admin(user):
+    return user.is_authenticated and user.is_staff
 
 class ProfileForm(forms.ModelForm):
     class Meta:
