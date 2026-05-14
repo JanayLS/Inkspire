@@ -8,23 +8,27 @@
 
         <!-- HEADER -->
         <div class="post-header">
-    
-            {% if artwork.gallery.owner.profile.profile_image %}
-                <img src="{{ artwork.owner.profile.profile_image.url }}" class="feed-avatar">
-            {% else %}
-                <div class="feed-avatar"></div>
-            {% endif %}
 
+        {% if artwork.gallery and artwork.gallery.owner and artwork.gallery.owner.profile.profile_image %}
+            <img src="{{ artwork.gallery.owner.profile.profile_image.url }}" class="feed-avatar">
+        {% else %}
+            <div class="feed-avatar"></div>
+        {% endif %}
+
+        {% if artwork.gallery and artwork.gallery.owner %}
             <a href="{% url 'user_profile' artwork.gallery.owner.username %}">
                 {{ artwork.gallery.owner.username }}
             </a>
+        {% endif %}
 
-        </div>
+    </div>
 
 
 
         <!-- IMAGE -->
-        <img src="{{ artwork.image.url }}">
+        {% if artwork.image %}
+            <img src="{{ artwork.image.url }}">
+        {% endif %}
 
         <!-- BODY -->
         <div class="card-body">
@@ -43,7 +47,10 @@
 
             <!-- CAPTION -->
             <p>
-                <strong>{{ artwork.gallery.owner.username }}</strong>
+                {% if artwork.gallery and artwork.gallery.owner %}
+                    <strong>{{ artwork.gallery.owner.username }}</strong>
+                {% endif %}
+                
                 {{ artwork.description }}
             </p>
 
