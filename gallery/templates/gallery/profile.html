@@ -39,7 +39,9 @@
 <div class="grid">
     {% for artwork in artworks %}
         <div class="grid-item" onclick="openModal({{ artwork.id }})">
+        {% if artwork.image %}
             <img src="{{ artwork.image.url }}" alt="art">
+        {% endif %}
 
             <div class="overlay">
                 ❤️ {{ artwork.likes.count }}
@@ -79,7 +81,7 @@ const posts = {
     {% for artwork in artworks %}
         "{{ artwork.id }}": {
             image: "{{ artwork.image.url }}",
-            username: "{{ artwork.owner.username }}",
+            username: "{{ artwork.gallery.owner.username }}",
             description: "{{ artwork.description|escapejs }}",
             likes: "{{ artwork.likes.count }}",
             comments: [
