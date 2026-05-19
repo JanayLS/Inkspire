@@ -133,7 +133,9 @@ def user_profile(request, username):
 
 def user_profile(request, username):
     user = get_object_or_404(User, username=username)
-    artworks = Artwork.objects.filter(owner=user).order_by('-created_at')
+    artworks = Artwork.objects.filter(
+        gallery__owner=user
+    ).order_by('-created_at')
     galleries = Gallery.objects.filter(owner=user)
     
     return render(request, 'gallery/profile.html', {
