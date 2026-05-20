@@ -164,22 +164,33 @@ def gallery_feed(request):
 
 @login_required
 def upload_artwork(request):
-    form = ArtworkForm(request.POST or None, request.FILES or None)
 
-    if request.method == "POST":
-        if form.is_valid():
-            artwork = form.save(commit=False)
+    if request.method == 'POST':
 
-            # attach gallery (you must define how you choose it)
-            gallery_id = request.POST.get("gallery_id")
-            gallery = Gallery.objects.get(id=gallery_id)
+        gallery_id = request.POST.get('gallery')
 
-            artwork.gallery = gallery
-            artwork.save()
+        gallery = Gallery.objects.filter(
+            id=gallery_id,
+            owner=request.user
+        ).first()
 
-            return redirect("gallery_feed")
+        if not gallery:
+            return redirect('user_profile', username=request.user.username)
 
-    return render(request, "gallery/upload.html", {"form": form})
+        Artwork.objects.create(
+            title=request.POST.get('title'),
+            description=request.POST.get('description'),
+            image=request.FILES.get('image'),
+            gallery=gallery
+        )
+
+        return redirect('gallery_feed')
+
+    form = ArtworkForm()
+
+    return render(request, 'gallery/upload.html', {
+        'form': form
+    })
 
 
 @login_required
