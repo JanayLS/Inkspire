@@ -16,11 +16,12 @@ class Artwork(models.Model):
     image = models.ImageField(upload_to='artworks/')
     created_at = models.DateTimeField(auto_now_add=True)
     gallery = models.ForeignKey(
-        "Gallery",
+        'Gallery',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='artworks'
+        related_name='artworks',
+        on_delete=models.CASCADE
     )
     
     def __str__(self):
