@@ -31,6 +31,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from .models import Artwork, Gallery
+from .forms import ProfileForm, ArtworkForm
 
 
 def is_admin(user):
