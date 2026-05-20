@@ -17,7 +17,6 @@ class Artwork(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     gallery = models.ForeignKey(
         'Gallery',
-        on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name='artworks',
