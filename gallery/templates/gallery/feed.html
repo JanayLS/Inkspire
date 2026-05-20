@@ -6,20 +6,25 @@
 {% for artwork in artworks %}
     <div class="card">
 
-        <!-- HEADER -->
-        <div class="post-header">
+    <!-- HEADER -->
+    <div class="post-header">
 
-        {% if artwork.gallery and artwork.gallery.owner and artwork.gallery.owner.profile.profile_image %}
-            <img src="{{ artwork.gallery.owner.profile.profile_image.url }}" class="feed-avatar">
-        {% else %}
-            <div class="feed-avatar"></div>
-        {% endif %}
+        <div class="user-info">
 
-        {% if artwork.gallery and artwork.gallery.owner %}
-            <a href="{% url 'user_profile' artwork.gallery.owner.username %}">
-                {{ artwork.gallery.owner.username }}
-            </a>
-        {% endif %}
+            {% if artwork.gallery and artwork.gallery.owner and artwork.gallery.owner.profile.profile_image %}
+                <img src="{{ artwork.gallery.owner.profile.profile_image.url }}" class="feed-avatar">
+            {% else %}
+                <div class="feed-avatar"></div>
+            {% endif %}
+
+            {% if artwork.gallery and artwork.gallery.owner %}
+                <a class="username-link"
+                href="{% url 'user_profile' artwork.gallery.owner.username %}">
+                    {{ artwork.gallery.owner.username }}
+                </a>
+            {% endif %}
+
+        </div>
 
     </div>
 
